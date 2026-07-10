@@ -34,5 +34,9 @@
 
 **How I resolved it:** I manually re-added the `WatchlistEntry` class to `models.py`, changing `film_id` from `db.Integer` to `db.String(36)` to match the UUID refactor already applied to `Film.id` and `CollectionEntry.film_id` on main. I also updated leftover integer-ID assumptions in docstrings in `services/watchlist_service.py` and
 
+## Commit History Screenshot
+
+![git log --oneline output](commitHistorySC.png)
+
 ## PR Description
 <!-- Written at the end -->
