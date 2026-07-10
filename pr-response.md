@@ -30,9 +30,9 @@
 **Engagement with reviewer's point:** I agree with the reviewer's reasoning that most users care more about what they recently added than about alphabetical browsing. Alphabetical sort would only clearly win if users were expected to scan a long list manually to find something specific — but that use case is better served by search/filtering than by sort order, so I don't think it's worth defaulting to alphabetical at the cost of surfacing recent activity.
 
 ## Comment 6 — Rebase
-**What conflicted:**
-**How I resolved it:**
-**How I verified no conflict remains:**
+**What conflicted:** Rebasing onto `origin/main` surfaced a conflict in `.gitignore` (a duplicate file added independently on both branches), resolved by merging both sets of ignored patterns. More significantly, `models.py`'s `WatchlistEntry` class — which didn't exist on `main` at the time of the UUID refactor — was silently dropped during the rebase rather than flagged as a conflict, since git had no overlapping lines in `models.py` to compare it against.
+
+**How I resolved it:** I manually re-added the `WatchlistEntry` class to `models.py`, changing `film_id` from `db.Integer` to `db.String(36)` to match the UUID refactor already applied to `Film.id` and `CollectionEntry.film_id` on main. I also updated leftover integer-ID assumptions in docstrings in `services/watchlist_service.py` and
 
 ## PR Description
 <!-- Written at the end -->
