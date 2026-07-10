@@ -16,9 +16,11 @@
 **How I verified:** Ran `pytest tests/test_watchlist.py -v` — all three tests passed. Also ran the full suite (`pytest tests/ -v`) to confirm no regressions in the collection tests.
 
 ## Comment 4 — Default visibility
-**My position:**
-**Reasoning:**
-**Tradeoff acknowledged:**
+**My position:** Keep `public=True` as the default.
+
+**Reasoning:** CineLog is built as a community app, and the core value of a "want to watch" list is social — it lets friends see what you're planning to watch, spark recommendations, or find people with similar taste. If watchlists defaulted to private, most users would never think to change the setting, and the discovery feature would effectively be dead on arrival for the majority of the user base. Defaulting to public means the community-facing benefit of the feature is actually realized rather than left dormant behind a setting most people never touch.
+
+**Tradeoff acknowledged:** Some users may not want their in-progress viewing intentions visible — for example, feeling exposed about not having seen a well-known film yet, or just preferring to keep their list private until they've curated it. Since `public` is a per-entry field rather than a global account setting, users retain the ability to mark individual films private if they want more control, but the friction of an opt-out default means some users who'd prefer privacy may never realize or bother to change it.
 
 ## Comment 5 — Sort order
 **My position:**
