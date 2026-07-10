@@ -12,8 +12,8 @@
 **How I verified:** Manually tested via the running Flask server — POSTed the same film to a user's watchlist twice. The first request succeeded and created the entry (201 response). The second request correctly raised `AlreadyInWatchlistError`, confirming the duplicate was caught before a second row was created.
 
 ## Comment 3 — Missing test
-**What I did:**
-**How I verified:**
+**What I did:** Created `tests/test_watchlist.py` following the same fixture and structure as `tests/test_collection.py`. Added `test_add_to_watchlist_nonexistent_film_raises`, mirroring `test_add_to_collection_nonexistent_film_raises`, to confirm `add_to_watchlist()` raises `FilmNotFoundError` for a film_id that doesn't exist. Also added `test_add_to_watchlist_creates_entry` and `test_add_to_watchlist_duplicate_raises` to cover the basic add flow and the deduplication logic from Comment 2.
+**How I verified:** Ran `pytest tests/test_watchlist.py -v` — all three tests passed. Also ran the full suite (`pytest tests/ -v`) to confirm no regressions in the collection tests.
 
 ## Comment 4 — Default visibility
 **My position:**
