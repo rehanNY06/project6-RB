@@ -23,9 +23,11 @@
 **Tradeoff acknowledged:** Some users may not want their in-progress viewing intentions visible — for example, feeling exposed about not having seen a well-known film yet, or just preferring to keep their list private until they've curated it. Since `public` is a per-entry field rather than a global account setting, users retain the ability to mark individual films private if they want more control, but the friction of an opt-out default means some users who'd prefer privacy may never realize or bother to change it.
 
 ## Comment 5 — Sort order
-**My position:**
-**Reasoning:**
-**Engagement with reviewer's point:**
+**My position:** Implement the maintainer's suggestion — sort by `date_added` descending (most recently added first).
+
+**Reasoning:** For a "want to watch" list, the most useful view is usually what you just added, since that reflects what's freshest in your mind or most recently caught your interest. Alphabetical order's main benefit — making a specific title easy to locate — matters less in a digital list, where a user looking for something specific would search or filter for the title rather than scroll and scan alphabetically. Recency-based sorting also keeps the watchlist consistent with how `get_collection()` already sorts, so the app's behavior is predictable across features rather than introducing a different sorting convention just for the watchlist.
+
+**Engagement with reviewer's point:** I agree with the reviewer's reasoning that most users care more about what they recently added than about alphabetical browsing. Alphabetical sort would only clearly win if users were expected to scan a long list manually to find something specific — but that use case is better served by search/filtering than by sort order, so I don't think it's worth defaulting to alphabetical at the cost of surfacing recent activity.
 
 ## Comment 6 — Rebase
 **What conflicted:**
