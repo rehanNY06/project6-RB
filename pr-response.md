@@ -1,7 +1,11 @@
 # PR Response Doc — CineLog Watchlist Feature
 
 ## AI Usage
-<!-- Fill in at the end -->
+I used AI assistance throughout this project in a few concrete ways:
+- **Codebase orientation:** Had the AI walk through `models.py`, `collection_service.py`, and `test_collection.py` before I touched the review comments, to understand the naming conventions (verb_to_noun), the dedup pattern, and the test fixture structure I'd need to mirror for the watchlist feature.
+- **Debugging:** Used AI help to diagnose a `RuntimeError` about the Flask app not being registered with SQLAlchemy (caused by running `python app.py` directly, which double-imports `app.py` as both `__main__` and a module) and later a circular import bug introduced during the interactive rebase (a blueprint import ended up at the top level of `app.py` instead of inside `create_app()`).
+- **Rebase troubleshooting:** Worked through multiple git conflicts during the Comment 6 rebase (`.gitignore`, a dropped `WatchlistEntry` model, and later merge conflicts during the interactive rebase in Milestone 4) with AI guidance on reading conflict markers and deciding which side to keep.
+- **Stress-testing design arguments:** For Comment 4 (default visibility) and Comment 5 (sort order), I formed my own position first, then used AI as a devil's advocate to check whether my reasoning held up and to help me phrase it more precisely. My final reasoning — that CineLog's community framing favors a public default despite the privacy tradeoff, and that alphabetical sort's main advantage is better served by search than by sort order — reflects my own judgment about this app's specific context, not a generic AI-generated argument.
 
 ## Comment 1 — Rename
 **What I did:** Renamed `save_to_watchlist()` to `add_to_watchlist()` in `services/watchlist_service.py` to match the verb_to_noun naming convention used by `add_to_collection()` in the collection service. Updated the import and call site in `routes/watchlist/watchlist.py` accordingly.
@@ -39,4 +43,22 @@
 ![git log --oneline output](commitHistorySC.png)
 
 ## PR Description
-<!-- Written at the end -->
+
+**Feature Overview:**
+This PR adds a watchlist feature so users can save films they want to watch. It includes a new `WatchlistEntry` model, service functions (`add_to_watchlist`, `get_watchlist`), and REST endpoints for adding films and viewing a user's watchlist. The feature includes deduplication to prevent the same film being added twice, and proper error handling for nonexistent films.
+
+**Design Decisions:**
+- **Default visibility:** New watchlist entries default to `public=True`. Since CineLog is a community app, a public default makes the feature's social/discovery value actually accessible to most users, rather than hidden behind a setting most people would never think to change.
+- **Sort order:** The watchlist is sorted by `date_added` descending (most recently added first), rather than alphabetically. This matches how the collection feature already sorts, and better serves the "what did I just decide to watch" use case than alphabetical browsing.
+
+**Manual Testing Steps:**
+1. Start the server: `flask run` (with `FLASK_APP=app.py` set)
+2. Create a user and film if you don't already have test data (see repo README or use the Python shell to insert directly via SQLAlchemy).
+3. Add a film to the watchlist:
+   - `POST /watchlist/<user_id>/add`
+   - Body: `{ "film_id": "<film_uuid>" }`
+   - Expect: `201` and a JSON watchlist entry.
+4. Add the same film again — expect an `AlreadyInWatchlistError` (currently surfaces as a 500, since the route doesn't catch it explicitly).
+5. View the watchlist:
+   - `GET /watchlist/<user_id>`
+   - Expect: `200` and a list of films sorted newest-added first, with `date_added` and `public` fields attached.
